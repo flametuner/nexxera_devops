@@ -1,0 +1,1 @@
+target_instance     ansible_connection=ssh   ansible_user=gustavo ansible_host=35.208.157.126
