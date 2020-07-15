@@ -43,6 +43,13 @@
         name: "{{ app_name }}"
         image: "{{ app_name }}:latest"
         recreate: true
+    - name: Docker | Prune everything
+      docker_prune:
+        containers: yes
+        images: yes
+        networks: yes
+        volumes: yes
+        builder_cache: yes
   roles:
     - role: geerlingguy.docker # Installs Docker
       become: true

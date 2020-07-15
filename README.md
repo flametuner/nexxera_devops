@@ -47,4 +47,7 @@ O que o script faz:
 3. Instala o Docker
 4. Cria uma imagem docker com o arquivo
 5. Cria/atualiza um container com a imagem nova
-6. Limpa containers/imagens antigos
+
+Após fazer uma update em `hello_word_java`, commitei e enquanto rodava o script tirei print do que acontecia nas logs:
+
+![](https://i.imgur.com/WTJuAun.png)
