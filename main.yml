@@ -3,7 +3,7 @@
   become: true
   vars:
     app_name: java_app
-    ftp_url: https://storage.cloud.google.com/nexxera_devops/ #ftp://user:password@localhost/
+    ftp_url: https://github.com/flametuner/nexxera_devops/raw/master/hello_world_java/ #ftp://user:password@localhost/
     file_name: helloworld.jar
     docker_users:
       - gustavo
@@ -33,6 +33,7 @@
         name: "{{ app_name }}:latest"
         force_source: true
         build:
+          pull: true
           path: "/temp/{{ app_name }}/"
           args:
             FILE_NAME: "{{ file_name }}"
