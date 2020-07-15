@@ -28,25 +28,40 @@ Com o problema de quando e onde vai ser a execução, temos que definir como vai
 
 Além de ser uma maneira muito mais fácil pois não é necessário se preocupar em qual ambiente está sendo executado o container, também é muito simples utilizar orquestradores de container e configurar detalhes como quantidade de réplicas de uma maneira simples.
 
+### Ferramenta utilizada
+
 Eu poderia utilizar Shell Script como maneira de automatizar esse processo, porém eu prefiro utilizar a ferramenta `Ansible` que além de executar um script ela tenta manter o estado que o script está, ou seja, se em algum momento algo for alterado ela volta ao estado desejado. 
+
+### Solução
+
+Com `Ansible` irei conectar no servidor destino, instalar Docker, criar uma imagem e instalar o container.
 
 ### Pré-requisitos
 
 - Instalar Ansible
-- Python instalado no host destino
-  
-Sendo assim, criei um script em `Ansible` em `main.yml` que tem como variáveis:
+- Configurar dados do servidor destino em `hosts`
+- Instalar roles externas com o comando ```ansible-galaxy install -r requirements.yml```
+### Variáveis:
 
+- `app_name`: nome da aplicação
 - `file_name`: nome do arquivo (poderia ser facilmente estendido para *prefix_file_name*)
-- ``:
+- `ftp_url`: link para ftp. ex: ftp://user:password@ftpserver/
 
-O que o script faz:
+Para mudar as variáveis, você pode alterar direto no arquivo ou sobreescreve-las adicionando o parametro no comando abaixo `--extra-vars='<var_name1>=<var1> <var_name2>=<var2>'`
+
+### O que o script faz:
 
 1. Conecta ao servidor destino
 2. Faz download do arquivo de update do FTP
 3. Instala o Docker
 4. Cria uma imagem docker com o arquivo
 5. Cria/atualiza um container com a imagem nova
+6. Limpa containers e imagens
+
+Para executar o script é só digitar os seguintes comandos:
+```
+$ ansible-playbook -i hosts main.yml
+```
 
 Após fazer uma update em `hello_word_java`, commitei e enquanto rodava o script tirei print do que acontecia nas logs:
 
