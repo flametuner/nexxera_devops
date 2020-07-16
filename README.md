@@ -66,3 +66,17 @@ $ ansible-playbook -i hosts main.yml
 Após fazer uma update em `hello_word_java`, commitei e enquanto rodava o script tirei print do que acontecia nas logs:
 
 ![](https://i.imgur.com/WTJuAun.png)
+
+## 2. Openshift Deploy Nginx
+
+Instalar o Minishift
+
+```
+$ oc new-app https://github.com/flametuner/nexxera_devops.git --strategy=docker --context-dir=openshift --name=nexxera
+```
+
+```
+$ oc expose svc nexxera --port=8081
+```
+
+Acessar em: http://nexxera-myproject.192.168.42.232.nip.io/info.json
