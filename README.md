@@ -9,14 +9,16 @@ Para esse problema temos o objetivo de pegar um arquivo com recebimento diário 
 O primeiro passo que devemos fazer é escolher onde iremos fazer a detecção de novos arquivos no FTP. Ela poderia ser feita de algumas maneiras
 
 - Cronjob em uma instância Linux
+    
+    O cronjob poderia ser fácilmente colocado junto com o FTP caso fosse um SFTP e tivessemos acesso a ele. No pior dos casos, existiria uma instância ligada pura e exclusivamente para isso. Essa solução seria ruim, pois estamos deixando a maior parte do recurso computacional e memória ocioso para algo que vai ser executado apenas 1 vez ao dia.
+
 - AWS Lambda + AWS Cloudwatch Events
+
+    O problema da solução anterior é resolvido com uma execução Serverless. Neste caso estou usando AWS Lambda + AWS Cloudwatch Events como exemplo, mas poderia ser qualquer serviço que execute esse propósito: executar uma aplicação, cobrar apenas pela execução e dar meios de executar periódicamente. Com isso economizamos recursos computacionais e consequentemente financeiros.
+
 - Job periódico no CI/CD (Jenkins/Gitlab CI/ouutros)
 
-O cronjob poderia ser fácilmente colocado junto com o FTP caso fosse um SFTP e tivessemos acesso a ele. No pior dos casos, existiria uma instância ligada pura e exclusivamente para isso. Essa solução seria ruim, pois estamos deixando a maior parte do recurso computacional e memória ocioso para algo que vai ser executado apenas 1 vez ao dia.
-
-Isso é resolvido com uma execução Serverless. Neste caso estou usando AWS Lambda + AWS Cloudwatch Events como exemplo, mas poderia ser qualquer serviço que execute esse propósito: executar uma aplicação, cobrar apenas pela execução e dar meios de executar periódicamente. Com isso economizamos recursos computacionais e consequentemente financeiros.
-
-A terceira opção é utilizar um CI/CD que, preferencialmente, já está instalado e é usado para outras operações e com isso apenas adicionamos um Job. O CI/CD ficará encarregado de executar nosso script diáriamente e com isso utilizamos recursos que já estão disponíveis pronto para esse tipo de execução.
+    A terceira opção é utilizar um CI/CD que, preferencialmente, já está instalado e é usado para outras operações e com isso apenas adicionamos um Job. O CI/CD ficará encarregado de executar nosso script diáriamente e com isso utilizamos recursos que já estão disponíveis pronto para esse tipo de execução.
 
 Algumas perguntas que devemos responder é: `Essa aplicação pode ficar fora do ar por um breve momento?` Se a resposta for não, temos que responder `Posso executar duas instâncias dessa aplicação ao mesmo tempo por um breve momento?`.
 
@@ -24,7 +26,7 @@ Temos que respondê-las para definir como será feita a atualização. Normalmen
 
 Nesse caso irei considerar que a aplicação `NÃO` é crítica e/ou o deploy ocorrerá em um horário que a aplicação não é necessária.
 
-Com o problema de quando e onde vai ser a execução, temos que definir como vai ser o empacotamento da aplicação recebida pelo FTP. Primeiro de tudo, iremos criar uma imagem de Docker para essa aplicação ou não? Quero dizer, podemos executar a aplicação de forma direta nomeando o processo, ou até mesmo através do `systemctl` do Linux e transformar a aplicação em um serviço mas, na minha opinião, a melhor forma é fazer uma imagem Docker e executar em containers.
+Com o problema de quando e onde vai ser a execução, temos que definir como vai ser o empacotamento da aplicação recebida pelo FTP. Primeiro de tudo, iremos criar uma imagem de Docker para essa aplicação ou não? Quero dizer, podemos executar a aplicação de forma direta nomeando o processo, ou até mesmo através do `systemctl` do Linux e transformar a aplicação em um serviço mas, na minha opinião, a melhor forma é fazer uma imagem `Docker` e executar em `containers`.
 
 Além de ser uma maneira muito mais fácil pois não é necessário se preocupar em qual ambiente está sendo executado o container, também é muito simples utilizar orquestradores de container e configurar detalhes como quantidade de réplicas de uma maneira simples.
 
