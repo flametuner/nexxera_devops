@@ -69,14 +69,58 @@ Após fazer uma update em `hello_word_java`, commitei e enquanto rodava o script
 
 ## 2. Openshift Deploy Nginx
 
-Instalar o Minishift
+Primeiro de tudo é necessário instalar o Minishift e isso depende de qual sistema operacional você está usando.
 
-```
-$ oc new-app https://github.com/flametuner/nexxera_devops.git --strategy=docker --context-dir=openshift --name=nexxera
-```
+No meu caso, eu uso Arch Linux, porém irei linkar os tutoriais de instalação caso seu sistema operacional seja diferente.
 
-```
-$ oc expose svc nexxera --port=8081
-```
+1. Configurar ambiente de virtualização
 
-Acessar em: http://nexxera-myproject.192.168.42.232.nip.io/info.json
+    Siga os passos em: https://docs.okd.io/3.11/minishift/getting-started/setting-up-virtualization-environment.html dependendo do seu OS.
+
+    No final do processo, inicie o `libvirtd`:
+    ```
+    $ sudo systemctl start libvirtd
+    ```
+
+    Esse ultimo passo é necessário sempre que for iniciar o Minishift a não ser que você habilite o serviço a iniciar junto com o computador. Se você desejar fazer isso é só digitar ``` sudo systemctl enable libvirtd```
+
+2. Instalar Minishift.
+   
+   Siga as instruções em https://docs.okd.io/3.11/minishift/getting-started/installing.html.
+
+   No geral, você irá instalar o pacote `minisfhit` no seu gerenciador de pacotes.
+
+3. Iniciando o Minishift.
+    
+    Para iniciar a máquina virtual, digite o seguinte comando:
+    ```
+    $ minishift start
+    ```
+    Ele irá checkar todos os pacotes, configurar a aplicação, docker, a maquina virtual, openshift, rede, etc. Caso ocorra algum erro, verifique se tudo foi instalado corretamente, e todos os pré-requisitos estão rodando normalmente.
+
+    Após a inicialização, você vai querer utilizar o comando `oc` para se comunicar com o Openshift. Para fazer isso basta executar o seguinte comando:
+    ```
+    $ eval $(minishift oc-env)
+    ```
+    Com isso, ele irá configurar o PATH na sessão do terminal que você ta rodando e assim permitir você ir para os próximos passos.
+
+4. Iniciando o container com Nginx.
+   
+   Resolvi criar um Dockerfile nesse respositório que adiciona o arquivo `info.json` no root do nginx. Por esse motivo, fica fácil de criar um container usando o Github.
+
+   Para criar um projeto e uma nova aplicação rodando nginx com o website estático, rode o seguinte comando:
+    ```
+    $ oc new-app https://github.com/flametuner/nexxera_devops.git --strategy=docker --context-dir=openshift --name=nexxera
+    ```
+    Podemos ver o serviço rodando usando os comandos ```oc status``` e ```oc get pods```. Porém para acessar ele, precisamos expor a porta, que no caso do Dockerfile é a 8081:
+    ```
+    $ oc expose svc nexxera --port=8081
+    ```
+    Com a porta exposta, a coisa mais simples a se fazer para acessar no navegador é digitar o seguinte comando e acessar o arquivo `info.json`:
+    ```
+    $ minishift openshift service nexxera --in-browser
+    ```
+
+    No meu caso, a URL ficou http://nexxera-myproject.192.168.42.232.nip.io/info.json
+
+    ![](https://i.imgur.com/TgyTpFp.png)
