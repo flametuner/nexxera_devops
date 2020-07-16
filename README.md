@@ -126,3 +126,27 @@ No meu caso, eu uso Arch Linux, porém irei linkar os tutoriais de instalação 
     No meu caso, a URL ficou http://nexxera-myproject.192.168.42.232.nip.io/info.json
 
     ![](https://i.imgur.com/TgyTpFp.png)
+
+## 3. Alertas via Email
+
+Normalmente em DevOps grande parte do trabalho se dá em monitoramento, e uma parte essencial do monitoramento é ser alertado quando algo estiver acontecendo.
+
+Existem ferramentas muito mais robustas e específicas pra isso. Eu, por exemplo, utilizaria uma combinação de Prometheus + Grafana. Com eles, o Prometheus funciona como uma espécie de agregador de dados e o Grafana apresenta esses dados e provém alertas.
+
+Mas, decidido que seria uma aplicação, teria que ser escolhido como seria feito o serviço de email. Normalmente eu optaria por usar AWS SES ou SendGrid pois dá uma segurança maior.
+
+Eu decidi por utilizar Python e o SMTP do Gmail pois são ferramentas fácies e qualquer um, seguindo esse repositório como tutorial, pode utiliza-las e enviar emails.
+
+Primeiramente, por questões de segurança, é dificil utilizar a senha padrão do Google então siga este tutorial para conseguir uma senha de app: https://support.google.com/accounts/answer/185833?hl=pt-BR
+
+Depois é só executar o seguinte comando, digitar a URL da seção anterior, seu email e sua senha de app:
+
+```
+$ python send_email/alerts.py
+```
+![](https://i.imgur.com/mP20iUK.png)
+
+![](https://i.imgur.com/nTjnjdh.png)
+
+A aplicação checka a cada 15 segundos os status dos serviços e alerta via email caso o serviço mude de estado. A aplicação também salva o estado atual em um arquivo `info.json`. Assim, mesmo que a aplicação seja reiniciada, não será recebido alertas desnecessários.
+
